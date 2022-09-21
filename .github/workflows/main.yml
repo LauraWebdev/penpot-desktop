@@ -22,6 +22,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Read package.json version
         uses: dutscher/read-package-json-endpoint-actions@v1.3.37
