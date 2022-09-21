@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+        
+      - name: Read package.json version
+        uses: dutscher/read-package-json-endpoint-actions@v1.3.37
+        id: package-json
+        
+      - name: Upload to GitHub
+        uses: fnkr/github-action-ghr@v1.3
+        env:
+          GHR_COMPRESS: xz
+          GHR_PATH: release/${{ steps.package-json.outputs.endpoint }}/Penpot Desktop_${{ steps.package-json.outputs.endpoint }}.exe
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
